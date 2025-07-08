@@ -7,3 +7,15 @@ export interface RegistroRequest{
 export interface RegistroFormulario extends RegistroRequest {
     confirmarSenha: string;
 }
+
+export interface LoginRequest{
+    email: string;
+    senha: string;
+}
+
+export interface UsuarioResponse {
+  id: number;
+  nome: string;
+  email: string;
+  role: string;
+}
