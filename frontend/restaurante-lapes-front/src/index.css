@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primario: #B91C1C;
+  --color-secundario: #FDE68A;
+  --radius-grande: 1rem;
+  --font-principal: 'Roboto', sans-serif;
+  --font-destaque: "Imperial Script", cursive;
+}
