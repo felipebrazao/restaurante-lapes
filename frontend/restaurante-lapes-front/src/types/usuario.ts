@@ -19,3 +19,9 @@ export interface UsuarioResponse {
   email: string;
   role: string;
 }
+
+export type LoginResponse = {
+  acessToken: string;
+  refreshToken: string;
+  usuario: UsuarioResponse;
+};

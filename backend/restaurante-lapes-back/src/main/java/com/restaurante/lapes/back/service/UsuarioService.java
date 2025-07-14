@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.restaurante.lapes.back.dto.LoginRequestDTO;
+import com.restaurante.lapes.back.dto.LoginResponseDTO;
 import com.restaurante.lapes.back.dto.UsuarioRequestDTO;
 import com.restaurante.lapes.back.dto.UsuarioResponseDTO;
 import com.restaurante.lapes.back.enums.Role;
@@ -16,6 +17,9 @@ public class UsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private JwtService jwtService;
 	
 	private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 	
@@ -41,7 +45,7 @@ public class UsuarioService {
 		usuarioRepository.deleteById(id);;
 	}
 	
-	public UsuarioResponseDTO autenticar (String email,String senha) {
+	public LoginResponseDTO autenticar (String email,String senha) {
 		Usuario usuario = usuarioRepository.findByEmail(email)
 				.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 		
@@ -49,11 +53,16 @@ public class UsuarioService {
 			throw new RuntimeException("Senha inválida");
 		}
 		
-		return new UsuarioResponseDTO(
+		String acessToken = jwtService.gerarAccessToken(usuario.getEmail());
+		String refreshToken = jwtService.gerarRefreshToken(usuario.getEmail());
+		
+		UsuarioResponseDTO usuarioDTO = new UsuarioResponseDTO(
 				usuario.getId(), 
 				usuario.getNome(), 
 				usuario.getEmail(), 
-				usuario.getRole());
+				usuario.getRole()
+				);
+		return new LoginResponseDTO(acessToken, refreshToken, usuarioDTO);
 	}
 	
 	public UsuarioResponseDTO buscarPorId(Long id) {

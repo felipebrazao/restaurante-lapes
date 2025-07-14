@@ -3,7 +3,7 @@ import { UsuarioService } from "../services/usuarioService";
 import { FaArrowLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import type { RegistroFormulario } from "../types/usuario";
-
+import { Input } from "../components/Input";
 
 export default function Register() {
     const [formulario, setFormulario] = useState<RegistroFormulario>({
@@ -76,49 +76,42 @@ export default function Register() {
         </h2>
 
       <div className="mb-4">
-        <label className="block mb-2 font-semibold">Nome</label>
-        <input
-          id="nome"
-          name="nome"
-          value={formulario.nome}
-          onChange={handleChange}
-          className="w-full border rounded px-3 py-2 focus:outline-none"
-        />
+       <Input
+       label="Nome"
+       name="nome"
+       type="name"
+       value={formulario.nome}
+       onChange={handleChange}
+       />
       </div>
 
       <div className="mb-4">
-        <label className="block mb-2 font-semibold">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          value={formulario.email}
-          onChange={handleChange}
-          className="w-full border rounded px-3 py-2 focus:outline-none"
-        />
+        <Input
+       label="Email"
+       name="email"
+       type="email"
+       value={formulario.email}
+       onChange={handleChange}
+       />
       </div>
 
       <div className="mb-4">
-        <label className="block mb-2 font-semibold">Senha</label>
-        <input
-          id="senha"
-          name="senha"
-          type="password"
-          value={formulario.senha}
-          onChange={handleChange}
-          className="w-full border rounded px-3 py-2 focus:outline-none"
+        <Input
+       label="Senha"
+       name="senha"
+       type="password"
+       value={formulario.senha}
+       onChange={handleChange}
         />
       </div>
 
       <div className="mb-6">
-        <label className="block mb-2 font-semibold">Confirmar Senha</label>
-        <input
-          id="confirmarSenha"
-          name="confirmarSenha"
-          type="password"
-          value={formulario.confirmarSenha}
-          onChange={handleChange}
-          className="w-full border rounded px-3 py-2 focus:outline-none"
+        <Input
+       label="ConfirmaSenha"
+       name="confirmarSenha"
+       type="password"
+       value={formulario.confirmarSenha}
+       onChange={handleChange}
         />
       </div>
 

@@ -1,35 +1,43 @@
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { UsuarioService } from "../services/usuarioService";
 import { Link } from "react-router-dom";
+import { Input } from "../components/Input";
 
 export default function Login() {
   const [formulario, setFormulario] = useState({ email: "", senha: "" });
   const [erro, setErro] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth(); // usa o hook certo
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErro("");
+  e.preventDefault();
+  setErro("");
 
-    try {
-      const usuario = await UsuarioService.login(formulario);
-      console.log("Usuário logado:", usuario);
+  try {
+    const usuarioLogado = await login(formulario.email, formulario.senha);
+
+    console.log("Usuário logado:", usuarioLogado);
+
+    if (usuarioLogado.usuario.role === "ADMIN") {
+      navigate("/admin"); 
+    } else {
       navigate("/cardapio");
-    } catch (err: any) {
-      setErro(err.message);
     }
+  } catch (err: any) {
+    setErro(err.message);
+  }
   };
 
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4"
       style={{
-        backgroundImage: "url('/src/assets/cafe2.jpg')", // coloque sua imagem nesta pasta
+        backgroundImage: "url('/src/assets/cafe2.jpg')",
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -51,26 +59,22 @@ export default function Login() {
         </h2>
 
         <div className="mb-4">
-          <label className="block mb-2 font-semibold">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={formulario.email}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2 focus:outline-none"
+          <Input
+          label="Email"
+          name="email"
+          type="email"
+          value={formulario.email}
+          onChange={handleChange}
           />
         </div>
 
         <div className="mb-6">
-          <label className="block mb-2 font-semibold">Senha</label>
-          <input
-            id="senha"
-            name="senha"
-            type="password"
-            value={formulario.senha}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2 focus:outline-none"
+          <Input
+          label="Senha"
+          name="senha"
+          type="password"
+          value={formulario.senha}
+          onChange={handleChange}
           />
         </div>
 
