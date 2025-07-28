@@ -8,7 +8,7 @@ export default function Login() {
   const [formulario, setFormulario] = useState({ email: "", senha: "" });
   const [erro, setErro] = useState("");
   const navigate = useNavigate();
-  const { login } = useAuth(); // usa o hook certo
+  const { login } = useAuth(); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormulario({ ...formulario, [e.target.name]: e.target.value });

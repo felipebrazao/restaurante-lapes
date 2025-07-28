@@ -1,32 +1,30 @@
-import axios from "axios";
+import api from "./api";
 import type { RegistroRequest, LoginRequest, UsuarioResponse, LoginResponse } from "../types/usuario";
-
-const API_BASE = "http://localhost:8080";
 
 export const UsuarioService = {
   async registrar(dados: RegistroRequest): Promise<void> {
     try {
-      await axios.post(`${API_BASE}/auth/register`, dados);
+      await api.post("/auth/register", dados);
     } catch (error: any) {
       throw new Error(error.response?.data?.message || "Erro ao registrar usuário");
     }
   },
 
   async login(dados: LoginRequest): Promise<LoginResponse> {
-  try {
-    const response = await axios.post<LoginResponse>(`${API_BASE}/auth/login`, dados);
+    try {
+      const response = await api.post<LoginResponse>("/auth/login", dados);
 
-    const { acessToken, refreshToken, usuario } = response.data;
+      const { acessToken, refreshToken, usuario } = response.data;
 
-    localStorage.setItem("accessToken", acessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    localStorage.setItem("usuario", JSON.stringify(usuario));
+      localStorage.setItem("accessToken", acessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("usuario", JSON.stringify(usuario));
 
-    return response.data;
-  } catch (error: any) {
-    throw new Error(error.response?.data?.message || "Erro ao fazer login");
-  }
-},
+      return response.data;
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || "Erro ao fazer login");
+    }
+  },
 
   getUsuarioLogado(): UsuarioResponse | null {
     const json = localStorage.getItem("usuario");
@@ -44,16 +42,16 @@ export const UsuarioService = {
     localStorage.removeItem("usuario");
   },
 
-
   salvarTokens(acessToken: string, refreshToken: string, usuario: UsuarioResponse) {
-  localStorage.setItem("accessToken", acessToken);
-  localStorage.setItem("refreshToken", refreshToken);
-  localStorage.setItem("usuario", JSON.stringify(usuario));
+    localStorage.setItem("accessToken", acessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("usuario", JSON.stringify(usuario));
   },
 
   logout() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("usuario");
   },
 
   getAccessToken() {
@@ -67,7 +65,7 @@ export const UsuarioService = {
   async refreshToken() {
     try {
       const refreshToken = UsuarioService.getRefreshToken();
-      const response = await axios.post(`${API_BASE}/auth/refresh`, { refreshToken });
+      const response = await api.post("/auth/refresh", { refreshToken });
       localStorage.setItem("accessToken", response.data.accessToken);
       return response.data.accessToken;
     } catch {

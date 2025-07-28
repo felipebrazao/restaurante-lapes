@@ -9,7 +9,7 @@ export default function AppRoutes(){
         <BrowserRouter>
         <Routes>
             <Route path="/register" element={<Register/>}/>
-            <Route path="/login" element={<Login/>}/>
+            <Route path="/" element={<Login/>}/>
             <Route path="/cardapio" element={<Cardapio/>}/>
             <Route path="/admin" element={<PainelAdmin/>}/>
         </Routes>

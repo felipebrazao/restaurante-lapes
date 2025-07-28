@@ -53,7 +53,7 @@ export default function Register() {
     }}
   >
     <button
-      onClick={() => navigate('/login')}
+      onClick={() => navigate('/')}
       className="absolute top-6 left-6 w-10 h-10 rounded-full bg-white/30 backdrop-blur-md flex items-center justify-center shadow hover:bg-white/50 transition"
       title="Voltar para login"
     >

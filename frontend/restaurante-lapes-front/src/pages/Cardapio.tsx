@@ -1,45 +1,52 @@
-import { useAuth } from "../hooks/useAuth";
-import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { listarCategorias } from "../services/categoriaService";
+import { listarItens } from "../services/itemCardapioService";
+import CategoriaTabs from "../components/CategoriaTabs";
+import ItemCard from "../components/Itemcard";
 
 export default function Cardapio() {
-  const { usuario } = useAuth();
-  const [loading, setLoading] = useState(true);
-  const [erro, setErro] = useState("");
-  const [pratos, setPratos] = useState([]);
+  const [categorias, setCategorias] = useState<any[]>([]);
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState<number | null>(null);
+  const [itens, setItens] = useState<any[]>([]);
+  const [loadingItens, setLoadingItens] = useState(false);
 
   useEffect(() => {
-    if (!usuario) return;
+    listarCategorias().then(setCategorias);
+  }, []);
 
-    async function carregarPratos() {
-      try {
-        // Aqui você pode usar seu service de pratos futuramente
-        // const dados = await PratoService.listar();
-        // setPratos(dados);
-      } catch (err) {
-        setErro("Erro ao carregar o cardápio.");
-      } finally {
-        setLoading(false);
-      }
+  useEffect(() => {
+    if (categoriaSelecionada !== null){
+        setLoadingItens(true);
+        listarItens(categoriaSelecionada)
+        .then(setItens)
+        .catch(console.error)
+        .finally(() => setLoadingItens(false));
+    } else {
+      setItens([]);
     }
-
-    carregarPratos();
-  }, [usuario]);
-
-  if (!usuario) {
-    return <Navigate to="/login" />;
-  }
-
-  if (loading) return <div>Carregando cardápio...</div>;
+  }, [categoriaSelecionada]);
 
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">Cardápio</h1>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Cardápio</h1>
 
-      {erro && <p className="text-red-500 mb-4">{erro}</p>}
+      <CategoriaTabs
+        categorias={categorias}
+        onSelect={setCategoriaSelecionada}
+        categoriaSelecionada={categoriaSelecionada}
+      />
 
-      {/* Aqui entra a renderização do cardápio */}
-      <p>Exibindo pratos filtrados por categoria, busca, etc...</p>
+      <div className="grid gap-4 mt-6">
+        {loadingItens && <p>Carregando itens...</p>}
+
+        {!loadingItens && itens.length === 0 && categoriaSelecionada && (
+          <p className="text-gray-500">Nenhum item nesta categoria.</p>
+        )}
+
+        {!loadingItens && itens.map((item) => (
+          <ItemCard key={item.id} item={item} />
+        ))}
+      </div>
     </div>
   );
 }
