@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { listarCategorias } from "../services/categoriaService";
 import { listarItens } from "../services/itemCardapioService";
 import CategoriaTabs from "../components/CategoriaTabs";
-import ItemCard from "../components/Itemcard";
+import ItemCard from "../components/ItemCard";
 
 export default function Cardapio() {
   const [categorias, setCategorias] = useState<any[]>([]);
@@ -15,15 +15,23 @@ export default function Cardapio() {
   }, []);
 
   useEffect(() => {
-    if (categoriaSelecionada !== null){
+    const carregarItens = async () => {
+      if (categoriaSelecionada !== null){
         setLoadingItens(true);
-        listarItens(categoriaSelecionada)
-        .then(setItens)
-        .catch(console.error)
-        .finally(() => setLoadingItens(false));
-    } else {
-      setItens([]);
-    }
+        try{
+          const dados = await listarItens(categoriaSelecionada);
+          setItens(dados);
+        }catch (erro) {
+          console.log("Erro ao carregar itens:", erro);
+        } finally {
+          setLoadingItens(false);
+        }
+      } else{
+        setItens([]);
+      }
+    };
+
+    carregarItens();
   }, [categoriaSelecionada]);
 
   return (
