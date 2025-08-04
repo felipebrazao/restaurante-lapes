@@ -7,7 +7,6 @@ interface Categoria {
 
 interface FormularioItemCardapioProps {
   categorias: Categoria[];
-  itemId?: number; // novo: para identificar se está editando
   onSubmit: (item: {
     nome: string;
     descricao: string;
@@ -17,14 +16,11 @@ interface FormularioItemCardapioProps {
     fotoUrl: string;
     categoriasIds: number[];
   }) => void;
-  onDelete?: (itemId: number) => void; // novo: função de deletar
 }
 
 export default function FormularioItemCardapio({
   categorias,
-  itemId,
   onSubmit,
-  onDelete,
 }: FormularioItemCardapioProps) {
   const [form, setForm] = useState({
     nome: "",
@@ -42,32 +38,15 @@ export default function FormularioItemCardapio({
     >
   ) => {
     const { name, value } = e.target;
-
     let newValue: string | number | boolean = value;
 
-    if (
-      e.target instanceof HTMLInputElement &&
-      e.target.type === "checkbox"
-    ) {
+    if (e.target instanceof HTMLInputElement && e.target.type === "checkbox") {
       newValue = e.target.checked;
     }
 
     setForm((prev) => ({
       ...prev,
       [name]: newValue,
-    }));
-  };
-
-  const handleCategoriaChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selecionadas = Array.from(
-      e.target.selectedOptions,
-      (option) => Number(option.value)
-    );
-    setForm((prev) => ({
-      ...prev,
-      categoriasIds: selecionadas,
     }));
   };
 
@@ -78,12 +57,6 @@ export default function FormularioItemCardapio({
       precoCentavos: Number(form.precoCentavos),
       tempoPreparoMinutos: Number(form.tempoPreparoMinutos),
     });
-  };
-
-  const handleDelete = () => {
-    if (itemId && onDelete) {
-      onDelete(itemId);
-    }
   };
 
   return (
@@ -141,37 +114,36 @@ export default function FormularioItemCardapio({
         Disponível
       </label>
 
-      <select
-        multiple
-        value={form.categoriasIds.map(String)}
-        onChange={handleCategoriaChange}
-        className="border p-2 w-full h-32"
-      >
-        {categorias.map((cat) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.nome}
-          </option>
-        ))}
-      </select>
-
-      <div className="flex gap-4">
-        <button
-          type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          Salvar Item
-        </button>
-
-        {itemId && onDelete && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="bg-red-600 text-white px-4 py-2 rounded"
-          >
-            Excluir Item
-          </button>
-        )}
+      <div className="space-y-2">
+        <p className="font-medium">Categorias:</p>
+        <div className="grid grid-cols-2 gap-2">
+          {categorias.map((cat) => (
+            <label key={cat.id} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={form.categoriasIds.includes(cat.id)}
+                onChange={() => {
+                  const selecionado = form.categoriasIds.includes(cat.id);
+                  setForm((prev) => ({
+                    ...prev,
+                    categoriasIds: selecionado
+                      ? prev.categoriasIds.filter((id) => id !== cat.id)
+                      : [...prev.categoriasIds, cat.id],
+                  }));
+                }}
+              />
+              {cat.nome}
+            </label>
+          ))}
+        </div>
       </div>
+
+      <button
+        type="submit"
+        className="bg-green-600 text-white px-4 py-2 rounded"
+      >
+        Salvar Item
+      </button>
     </form>
   );
 }
