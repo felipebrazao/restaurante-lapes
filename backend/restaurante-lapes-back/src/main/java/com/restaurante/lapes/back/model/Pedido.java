@@ -33,5 +33,5 @@ public class Pedido {
     private Usuario cliente;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemCardapio> itens;
+    private List<ItemPedido> itens;
 }
