@@ -18,7 +18,8 @@ Esta é uma API RESTful desenvolvida com **Java** e **Spring Boot** para gerenci
 - **CRUD de Pedidos** (`/pedidos`)
 - **Adição de Itens em Pedidos** (`/itens-pedido`)
 - Relacionamentos entre entidades (ex: produtos pertencem a categorias)
-- https://app.swaggerhub.com/templates/cesupa-04b/lapes/1.0(Swagger para a documentaçao da API)
+- https://app.swaggerhub.com/templates/cesupa-04b/lapes/1.0
+- acima o Swagger para a documentaçao da API e exemplos de requisiçoes.
 
 ## Como Executar
 
