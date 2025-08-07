@@ -8,7 +8,7 @@ Esta é uma API RESTful desenvolvida com **Java** e **Spring Boot** para gerenci
 - Spring Boot
 - Spring Web
 - Spring Data JPA
-- H2 Database (ambiente de desenvolvimento)
+- Postgre database
 - Lombok
 
 ## Funcionalidades
