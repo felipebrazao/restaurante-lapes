@@ -40,7 +40,7 @@ public class PedidoService {
         response.setId(pedido.getId());
         response.setTotalCentavos(pedido.getTotalCentavos());
         response.setTempoPreparoMinutos(pedido.getTempoPreparoMinutos());
-        response.setStatus(pedido.getStatus().name());
+        response.setStatus(pedido.getStatus());
         response.setEnderecoEntrega(pedido.getEnderecoEntrega());
         response.setObservacoes(pedido.getObservacoes());
         response.setItens(itensDTO);
@@ -93,5 +93,32 @@ public class PedidoService {
         }
 
         return pedidoRepository.save(pedido);
+    }
+    
+    public List<PedidoResponseDTO> listarPedidos() {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+
+        return pedidos.stream().map(pedido -> {
+            PedidoResponseDTO dto = new PedidoResponseDTO();
+            dto.setId(pedido.getId());
+            dto.setTotalCentavos(pedido.getTotalCentavos());
+            dto.setTempoPreparoMinutos(pedido.getTempoPreparoMinutos());
+            dto.setStatus(pedido.getStatus());
+            dto.setEnderecoEntrega(pedido.getEnderecoEntrega());
+            dto.setObservacoes(pedido.getObservacoes());
+
+            List<ItemPedidoResponseDTO> itensDTO = pedido.getItens().stream().map(item -> {
+                ItemPedidoResponseDTO itemDTO = new ItemPedidoResponseDTO();
+                itemDTO.setNome(item.getItemCardapio().getNome());
+                itemDTO.setQuantidade(item.getQuantidade());
+                itemDTO.setPrecoUnitarioCentavos(item.getPrecoUnitarioCentavos());
+                itemDTO.setSubtotalCentavos(item.getSubtotalCentavos());
+                return itemDTO;
+            }).toList();
+
+            dto.setItens(itensDTO);
+
+            return dto;
+        }).toList();
     }
 }

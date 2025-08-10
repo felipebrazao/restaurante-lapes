@@ -6,6 +6,9 @@ import com.restaurante.lapes.back.model.Pedido;
 import com.restaurante.lapes.back.service.PedidoService;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,5 +26,11 @@ public class PedidoController {
         Pedido novoPedido = pedidoService.criarPedido(dto);
         PedidoResponseDTO response = pedidoService.toResponseDTO(novoPedido);
         return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<PedidoResponseDTO>> listarPedidos() {
+        List<PedidoResponseDTO> pedidos = pedidoService.listarPedidos();
+        return ResponseEntity.ok(pedidos);
     }
 }
