@@ -46,6 +46,7 @@ export const UsuarioService = {
     localStorage.setItem("accessToken", acessToken);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("usuario", JSON.stringify(usuario));
+    localStorage.setItem("role", usuario.role);
   },
 
   logout() {

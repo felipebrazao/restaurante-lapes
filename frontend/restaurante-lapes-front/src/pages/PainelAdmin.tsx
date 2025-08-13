@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   listarCategorias,
   criarCategoria,
@@ -15,6 +16,7 @@ import FormularioCategoria from "../components/FormularioCategoria";
 import FormularioItemCardapio from "../components/FormularioItemCardapio";
 
 export default function Admin() {
+  const navigate = useNavigate();
   const [categorias, setCategorias] = useState<any[]>([]);
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<
     number | null
@@ -24,6 +26,14 @@ export default function Admin() {
   );
   const [itens, setItens] = useState<any[]>([]);
   const [loadingItens, setLoadingItens] = useState(false);
+
+   useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (role !== "ADMIN") {
+      navigate("/"); 
+    }
+  }, [navigate]);
+
 
   useEffect(() => {
     carregarCategorias();

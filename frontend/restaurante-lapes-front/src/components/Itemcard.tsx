@@ -10,10 +10,11 @@ interface ItemCardProps {
     categorias: { id: number; nome: string }[];
     fotoUrl?: string;
   };
-  onDelete?: (id: number) => void; // botão opcional de exclusão
+  onDelete?: (id: number) => void;
+  onAdd?: () => void;
 }
 
-export default function ItemCard({ item, onDelete }: ItemCardProps) {
+export default function ItemCard({ item, onDelete, onAdd }: ItemCardProps) {
   return (
     <div className="border rounded-xl shadow-md p-4 flex gap-4 relative">
       {item.fotoUrl ? (
@@ -50,8 +51,16 @@ export default function ItemCard({ item, onDelete }: ItemCardProps) {
               </span>
             ))}
         </div>
-      </div>
 
+        {onAdd && (
+          <button
+            onClick={onAdd}
+            className="mt-4 bg-primario text-white px-3 py-1 rounded hover:brightness-90"
+          >
+            + Carrinho
+          </button>
+        )}
+      </div>
       {onDelete && (
         <button
           onClick={() => onDelete(item.id)}
