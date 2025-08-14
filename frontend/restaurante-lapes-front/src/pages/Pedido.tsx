@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { criarPedido } from "../services/PedidoService";
-import type { ItemCarrinho } from "../services/PedidoService";
+import { criarPedido } from "../services/pedidoService";
+import type { ItemCarrinho } from "../services/pedidoService";
 import { useNavigate } from "react-router-dom";
 
 export default function Pedido() {
@@ -15,7 +15,10 @@ export default function Pedido() {
     if (carrinhoSalvo) setCarrinho(JSON.parse(carrinhoSalvo));
   }, []);
 
-  const total = carrinho.reduce((acc, item) => acc + item.precoCentavos * item.quantidade, 0);
+  const total = carrinho.reduce(
+    (acc, item) => acc + item.precoCentavos * item.quantidade,
+    0
+  );
 
   const confirmarPedido = async () => {
     if (!endereco) {
@@ -27,11 +30,18 @@ export default function Pedido() {
       await criarPedido(carrinho, endereco, observacoes);
       alert("Pedido criado com sucesso!");
       localStorage.removeItem("carrinho");
-      navigate("/cardapio"); 
+      navigate("/cardapio");
     } catch (err: any) {
       alert("Erro ao criar pedido: " + err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const cancelarPedido = () => {
+    if (window.confirm("Tem certeza que deseja cancelar o pedido?")) {
+      localStorage.removeItem("carrinho");
+      navigate("/cardapio");
     }
   };
 
@@ -43,10 +53,14 @@ export default function Pedido() {
     <div className="p-6 max-w-2xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Resumo do Pedido</h1>
 
-      {carrinho.map(item => (
+      {carrinho.map((item) => (
         <div key={item.id} className="flex justify-between border-b py-2">
-          <span>{item.nome} x {item.quantidade}</span>
-          <span>R$ {(item.precoCentavos * item.quantidade / 100).toFixed(2)}</span>
+          <span>
+            {item.nome} x {item.quantidade}
+          </span>
+          <span>
+            R$ {(item.precoCentavos * item.quantidade / 100).toFixed(2)}
+          </span>
         </div>
       ))}
 
@@ -60,7 +74,7 @@ export default function Pedido() {
         <input
           type="text"
           value={endereco}
-          onChange={e => setEndereco(e.target.value)}
+          onChange={(e) => setEndereco(e.target.value)}
           className="w-full border rounded px-3 py-2"
         />
       </div>
@@ -69,18 +83,27 @@ export default function Pedido() {
         <label className="block mb-1 font-semibold">Observações</label>
         <textarea
           value={observacoes}
-          onChange={e => setObservacoes(e.target.value)}
+          onChange={(e) => setObservacoes(e.target.value)}
           className="w-full border rounded px-3 py-2"
         />
       </div>
 
-      <button
-        onClick={confirmarPedido}
-        disabled={loading}
-        className="mt-4 w-full bg-primario text-white py-2 rounded hover:brightness-90"
-      >
-        {loading ? "Criando pedido..." : "Confirmar Pedido"}
-      </button>
+      <div className="flex gap-4 mt-4">
+        <button
+          onClick={confirmarPedido}
+          disabled={loading}
+          className="flex-1 bg-primario text-white py-2 rounded hover:brightness-90"
+        >
+          {loading ? "Criando pedido..." : "Confirmar Pedido"}
+        </button>
+
+        <button
+          onClick={cancelarPedido}
+          className="flex-1 bg-red-600 text-white py-2 rounded hover:bg-red-700"
+        >
+          Cancelar Pedido
+        </button>
+      </div>
     </div>
   );
 }

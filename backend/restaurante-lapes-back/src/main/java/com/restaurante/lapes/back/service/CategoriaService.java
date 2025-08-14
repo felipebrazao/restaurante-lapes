@@ -20,7 +20,6 @@ public class CategoriaService {
 
 	private final CategoriaRepository categoriaRepository;
 	private final ItemCardapioRepository itemRepository;
-	
 	 public CategoriaService(CategoriaRepository categoriaRepository, ItemCardapioRepository itemRepository) {
 	        this.categoriaRepository = categoriaRepository;
 	        this.itemRepository = itemRepository;

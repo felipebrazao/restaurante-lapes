@@ -11,29 +11,24 @@ import {
   deletarItem,
 } from "../services/itemCardapioService";
 import CategoriaTabs from "../components/CategoriaTabs";
-import ItemCard from "../components/ItemCard";
+import ItemCard from "../components/Itemcard";
 import FormularioCategoria from "../components/FormularioCategoria";
 import FormularioItemCardapio from "../components/FormularioItemCardapio";
 
 export default function Admin() {
   const navigate = useNavigate();
   const [categorias, setCategorias] = useState<any[]>([]);
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState<
-    number | null
-  >(null);
-  const [categoriaParaExcluir, setCategoriaParaExcluir] = useState<any | null>(
-    null
-  );
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState<number | null>(null);
+  const [categoriaParaExcluir, setCategoriaParaExcluir] = useState<any | null>(null);
   const [itens, setItens] = useState<any[]>([]);
   const [loadingItens, setLoadingItens] = useState(false);
 
-   useEffect(() => {
+  useEffect(() => {
     const role = localStorage.getItem("role");
     if (role !== "ADMIN") {
-      navigate("/"); 
+      navigate("/");
     }
   }, [navigate]);
-
 
   useEffect(() => {
     carregarCategorias();
@@ -72,11 +67,7 @@ export default function Admin() {
   const handleDeletarCategoria = async () => {
     if (!categoriaParaExcluir) return;
 
-    if (
-      window.confirm(
-        `Deseja excluir a categoria "${categoriaParaExcluir.nome}"?`
-      )
-    ) {
+    if (window.confirm(`Deseja excluir a categoria "${categoriaParaExcluir.nome}"?`)) {
       await deletarCategoria(categoriaParaExcluir.id);
       await carregarCategorias();
       setCategoriaParaExcluir(null);
@@ -112,49 +103,48 @@ export default function Admin() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-10">
-      <h1 className="text-3xl font-bold">Administração do Cardápio</h1>
+    <div className="p-6 max-w-5xl mx-auto space-y-10 bg-white rounded-xl shadow-md border border-black-200">
+      <h1 className="text-3xl font-bold text-red-600">Painel de Administração</h1>
 
       <section className="grid gap-6 sm:grid-cols-2">
-        <div>
-          <h2 className="text-xl font-semibold mb-2">Nova Categoria</h2>
+        <div className="bg-white p-4 rounded-lg border-2 border-black-500 shadow-sm">
+          <h2 className="text-xl font-semibold text-black-600 mb-2">Nova Categoria</h2>
           <FormularioCategoria onSubmit={handleCriarCategoria} />
         </div>
 
-        <div>
-          <h2 className="text-xl font-semibold mb-2">Novo Item</h2>
-          <FormularioItemCardapio
-            categorias={categorias}
-            onSubmit={handleCriarItem}
-          />
+        {/* Formulário de Item */}
+        <div className="bg-white p-4 rounded-lg border-2 border-black-500 shadow-sm">
+          <h2 className="text-xl font-semibold text-black-600 mb-2">Novo Item</h2>
+          <FormularioItemCardapio categorias={categorias} onSubmit={handleCriarItem} />
         </div>
       </section>
 
-      <hr className="my-8" />
+      <hr className="my-8 border-black-200" />
 
-      <h2 className="text-2xl font-semibold mb-4">Visualização</h2>
+      <h2 className="text-2xl font-semibold text-black-600 mb-4">Visualização</h2>
+
       {categoriaParaExcluir && (
-        <div className="bg-red-50 border border-red-200 p-4 rounded mb-4">
-          <p className="text-red-700 mb-2">
-            Deseja realmente excluir a categoria{" "}
-            <strong>{categoriaParaExcluir.nome}</strong>?
+        <div className="bg-red-100 border border-red-300 p-4 rounded mb-4">
+          <p className="text-red-800 mb-2">
+            Deseja realmente excluir a categoria <strong>{categoriaParaExcluir.nome}</strong>?
           </p>
           <div className="flex gap-2">
             <button
               onClick={handleDeletarCategoria}
-              className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded shadow-sm"
             >
               Confirmar Exclusão
             </button>
             <button
               onClick={() => setCategoriaParaExcluir(null)}
-              className="text-sm text-gray-600 hover:text-gray-800"
+              className="text-sm text-red-700 hover:underline"
             >
               Cancelar
             </button>
           </div>
         </div>
       )}
+
       <CategoriaTabs
         categorias={categorias}
         onSelect={setCategoriaSelecionada}
@@ -163,7 +153,7 @@ export default function Admin() {
       />
 
       <div className="grid gap-4 mt-6">
-        {loadingItens && <p>Carregando itens...</p>}
+        {loadingItens && <p className="text-red-500">Carregando itens...</p>}
         {!loadingItens && itens.length === 0 && categoriaSelecionada && (
           <p className="text-gray-500">Nenhum item nesta categoria.</p>
         )}
